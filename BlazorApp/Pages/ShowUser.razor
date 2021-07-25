@@ -1,0 +1,61 @@
+﻿@using BlazorApp.Data;
+
+<p>
+    <!-- ユーザーカウント -->
+    Users : <b>@Users.Count()</b>
+</p>
+
+<br />
+
+<ul class="list-group">
+    <!-- ユーザーリストからユーザーの名前を呼ぶ -->
+    @foreach (UserData user in Users)
+    {
+        <li @key="user" class="list-group-item">
+            <!-- ユーザー削除onclickボタン -->
+            <button type="button" class="btn btn-link" @onclick="(() => this.OnClickKickUser(user))">[Kick]</button>
+            <label>@user.Name</label>
+        </li>
+    }
+</ul>
+
+@code {
+
+    /// <summary>
+    /// テストユーザーリストParameter
+    /// </summary>
+    [Parameter]
+    public List<UserData> Users { get; set; }
+
+    [Parameter]
+    public EventCallback CallbackTest { get; set; }
+
+    /// <summary>
+    /// 開始時実行
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        this.Users.Add(new UserData { Name = "Ryu" });
+        this.Users.Add(new UserData { Name = "Hak" });
+        this.Users.Add(new UserData { Name = "Rim" });
+    }
+
+    /// <summary>
+    /// AddUserボタンクリック時
+    /// </summary>
+    public void OnClickAddUser(UserData user)
+    {
+        // ユーザーリストに、入力されたユーザー名追加
+        this.Users.Add(user);
+    }
+
+    /// <summary>
+    /// ユーザー削除ボタンクリック時
+    /// </summary>
+    public void OnClickKickUser(UserData user)
+    {
+        this.Users.Remove(user);
+
+        CallbackTest.InvokeAsync(null);
+    }
+}
