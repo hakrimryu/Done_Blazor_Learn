@@ -4,7 +4,20 @@
 
 <h3>Online Users</h3>
 
-<ShowUser Users="_users" CallbackTest="CallbackTestFunc" @ref="_showUser"></ShowUser>
+<label>Theme Color:</label>
+<select class="form-control" @bind="this._selectedColor">
+    @foreach (var option in _options)
+    {
+        <option value="@option">
+            @option
+        </option>
+    }
+</select>
+
+
+<CascadingValue Name="ThemeColor" Value="_selectedColor">
+    <ShowUser Users="_users" CallbackTest="CallbackTestFunc" @ref="_showUser"></ShowUser>
+</CascadingValue>
 
 <br />
 
@@ -24,6 +37,9 @@
 </div>
 
 @code {
+
+    string _selectedColor = "Green";
+    List<string> _options = new List<string>() { "Green", "Red", "Blue" };
 
     /// <summary>
     /// テストユーザーリスト

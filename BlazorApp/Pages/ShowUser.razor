@@ -7,6 +7,10 @@
 
 <br />
 
+<Counter></Counter>
+
+<br />
+
 <ul class="list-group">
     <!-- ユーザーリストからユーザーの名前を呼ぶ -->
     @foreach (UserData user in Users)
@@ -14,12 +18,15 @@
         <li @key="user" class="list-group-item">
             <!-- ユーザー削除onclickボタン -->
             <button type="button" class="btn btn-link" @onclick="(() => this.OnClickKickUser(user))">[Kick]</button>
-            <label>@user.Name</label>
+            <label style="color:@_color" >@user.Name</label>
         </li>
     }
 </ul>
 
 @code {
+
+    [CascadingParameter(Name = "ThemeColor")]
+    string _color { get; set; }
 
     /// <summary>
     /// テストユーザーリストParameter
