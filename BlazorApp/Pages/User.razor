@@ -5,6 +5,7 @@
 <h3>Online Users</h3>
 
 <p>
+    <!-- ユーザーカウント -->
     Users : <b>@_users.Count()</b>
 </p>
 
@@ -32,7 +33,9 @@
         </div>
         <div class="col">
             <!-- ユーザー追加ボタン -->
-            <button class="btn btn-primary" type="button" @onclick="OnClickAddUser">Add a User</button>
+            <!-- 属性(attribute)にもBinding -->
+            <!-- conditionel attribute 自体に条件 -->>
+            <button class=@this._btnClass type="button" @onclick="OnClickAddUser" disabled="@(_users.Count() >= 5)">Add a User</button>
         </div>
     </div>
 </div>
@@ -49,6 +52,8 @@
     /// </summary>
     string _inputName;
 
+    string _btnClass = "btn btn-primary";
+
     /// <summary>
     /// 開始時実行
     /// </summary>
@@ -57,6 +62,7 @@
         this._users.Add(new UserData { Name = "Ryu" });
         this._users.Add(new UserData { Name = "Hak" });
         this._users.Add(new UserData { Name = "Rim" });
+        this.RefreshButton();
     }
 
     /// <summary>
@@ -68,11 +74,20 @@
         this._users.Add(new UserData { Name = this._inputName });
         // 空き値で、初期化
         this._inputName = "";
+        this.RefreshButton();
     }
 
     void OnClickKickUser(UserData user)
     {
         this._users.Remove(user);
+        this.RefreshButton();
     }
 
+    void RefreshButton()
+    {
+        if (this._users.Count() % 2 == 0)
+            this._btnClass = "btn btn-primary";
+        else
+            this._btnClass = "btn btn-secondary";
+    }
 }
