@@ -1,7 +1,39 @@
 ﻿@page "/"
+@using BlazorApp.Data;
+@inject IFoodService foodService;
+@inject PaymentService paymentService;
 
-<h1>Hello, world!</h1>
+@inject SingletonService singleton;
+@inject TransientService transient;
+@inject ScopedService scoped;
 
-Welcome to your new app.
+<div>
+    @foreach (var food in foodService.GetFoods())
+    {
+        <div>@food.Name</div>
+        <div>@food.Price</div>
+    }
+</div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<div>
+    <!-- 生命サイクルテスト -->
+    <!-- 無変化
+        サーバーアップ時作成 -->
+    <h1>Singleton</h1>
+    Guid : @singleton.ID
+    <!-- 継続変化
+        リクエストをするたびに変化 -->
+    <h1>Transient</h1>
+    Guid : @transient.ID
+    <!-- 無変化, F5の時変化
+        接続時変化 -->
+    <h1>Scoped</h1>
+    Guid : @scoped.ID
+</div>
+
+@code
+{ protected override void OnInitialized()
+    {
+        
+    }
+}
