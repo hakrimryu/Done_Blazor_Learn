@@ -1,9 +1,10 @@
 ﻿@page "/counter"
 @using System.Threading;
+@inject BlazorApp.Data.CounterState CounterState
 
 <h1 style="color:@_color">Counter</h1>
 
-<p>Current count: @currentCount</p>
+<p>Current count: @CounterState.Count</p>
 
 <button class="btn btn-primary" @onclick="this.IncrementCount">Click me</button>
 
@@ -15,11 +16,9 @@
     [CascadingParameter(Name = "ThemeColor")]
     string _color { get; set; }
 
-    private int currentCount = 0;
-
     private void IncrementCount()
     {
-        currentCount++;
+        CounterState.Count = CounterState.Count + 1;
     }
 
     /// <summary>

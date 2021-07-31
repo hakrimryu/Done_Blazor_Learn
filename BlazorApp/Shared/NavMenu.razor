@@ -1,4 +1,7 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@inject BlazorApp.Data.CounterState ConterState
+@implements IDisposable
+
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">BlazorApp</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -30,6 +33,11 @@
     </ul>
 </div>
 
+<!-- カウント -->
+<div>
+    <p style="color:white">Counter : @ConterState.Count</p>
+</div>
+
 @code {
     private bool collapseNavMenu = true;
 
@@ -38,5 +46,30 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    /// <summary>
+    /// 開始時
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        // 購読
+        ConterState.OnStateChanged += onStateChanged;
+    }
+
+    /// <summary>
+    /// 更新
+    /// </summary>
+    void onStateChanged()
+    {
+        this.StateHasChanged();
+    }
+
+    /// <summary>
+    /// 解除
+    /// </summary>
+    void IDisposable.Dispose()
+    {
+        ConterState.OnStateChanged -= onStateChanged;
     }
 }
