@@ -7,14 +7,14 @@
 
 <p>This component demonstrates fetching data from a service.</p>
 
-@if (forecasts == null)
+@if (_forecasts == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
     <!-- テーブルにデータ入力 -->
-    <TableTemplate Items="forecasts" TItem="WeatherForecast">
+    <TableTemplate Items="_forecasts" TItem="WeatherForecast">
         <Top>
             <th>Date</th>
             <th>Temp. (C)</th>
@@ -28,13 +28,72 @@ else
             <td>@forecast.Summary</td>
         </Row>
     </TableTemplate>
+
+    <button class="btn btn-primary" @onclick="AddNewForecast">
+        Add New Forecast
+    </button>
+
+    if (this._showPopup)
+    {
+        <div class="modal" style="display:block" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Add Forecast</h3>
+                        <button type="button" class="close" @onclick="ClosePopup">
+                            <span area-hidden="true">X</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <EditForm Model="_addForecast" OnValidSubmit="SaveForecast">
+
+                            <!-- Form Validetion 機能 On -->
+                            <DataAnnotationsValidator />
+
+                            <!-- エラーがあれば詳細メッセージを出力 -->
+                            <ValidationSummary />
+
+                            <label for="TemperatureC">TemperatureC</label>
+                            <InputNumber class="form-control" placeholder="TemperatureC" @bind-Value="_addForecast.TemperatureC" />
+                            <label for="Summary">Summary</label>
+                            <InputText class="form-control" placeholder="Summary" @bind-Value="_addForecast.Summary" />
+                            <br />
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
 }
 
 @code {
-    private WeatherForecast[] forecasts;
+    private List<WeatherForecast> _forecasts;
+
+    bool _showPopup = false;
+    WeatherForecast _addForecast;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        _forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+    }
+
+    void AddNewForecast()
+    {
+        this._showPopup = true;
+        this._addForecast = new WeatherForecast();
+    }
+
+    void SaveForecast()
+    {
+        this._showPopup = false;
+        this._addForecast.Date = DateTime.Now;
+        this._forecasts.Add(this._addForecast);
+    }
+
+    void ClosePopup()
+    {
+        this._showPopup = false;
     }
 }
