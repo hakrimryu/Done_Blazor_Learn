@@ -1,4 +1,4 @@
-# [完]Learn_Blazor
+ # [Done] Blazor Learn
 (2021/07/31)
 
 1. Binding
